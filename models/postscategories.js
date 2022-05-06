@@ -4,6 +4,7 @@ module.exports = (sequelize, DataTypes) => {
     categoryId: DataTypes.INTEGER,
   }, {
     modelName: 'PostsCategories',
+    timestamps: false,
   });
   return PostsCategory;
 };
