@@ -9,6 +9,7 @@ router
   .get('/', defaultRoute)
   .post('/user', userController.newUser)
   .post('/login', userController.attemptToLogin)
-  .get('/user', userController.listUsers);
+  .get('/user', userController.listUsers)
+  .get('/user/:id', userController.findUser);
 
 module.exports = router;
