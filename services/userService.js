@@ -29,8 +29,17 @@ const listUsers = async () => {
   return list;
 };
 
+const findUser = async (id) => {
+  const user = await userModel.findByPk(id);
+
+  if (!user) return ({ errorMessage: 'User does not exist' });
+
+  return user;
+};
+
 module.exports = {
   createUser,
   userLogin,
   listUsers,
+  findUser,
 };

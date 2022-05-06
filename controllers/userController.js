@@ -48,6 +48,20 @@ const listUsers = async (req, res) => {
   return res.status(200).json(list);
 };
 
+const findUserById = async (req, res) => {
+  if (req.failAuthentication) {
+    const { statusCode, message } = req.failAuthentication;
+
+    return res.status(statusCode).json({ message });
+  }
+
+  const user = await userService.findUser(req.params.id);
+
+  if (user.errorMessage) return res.status(404).json({ message: user.errorMessage });
+
+  return res.status(200).json(user);
+};
+
 module.exports = {
   newUser: [
     userParamsVerification,
@@ -60,5 +74,9 @@ module.exports = {
   listUsers: [
     authenticationToken,
     listUsers,
+  ],
+  findUser: [
+    authenticationToken,
+    findUserById,
   ],
 };
