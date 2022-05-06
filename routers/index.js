@@ -12,6 +12,7 @@ router
   .post('/login', userController.attemptToLogin)
   .get('/user', userController.listUsers)
   .get('/user/:id', userController.findUser)
-  .post('/categories', categoryController.newCategory);
+  .post('/categories', categoryController.newCategory)
+  .get('/categories', categoryController.listCategories);
 
 module.exports = router;
