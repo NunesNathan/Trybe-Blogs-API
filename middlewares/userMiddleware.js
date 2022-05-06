@@ -1,4 +1,6 @@
+require('dotenv').config();
 const Joi = require('joi');
+const jwt = require('jsonwebtoken');
 
 const userCreateSchema = Joi.object({
   displayName: Joi.string().min(8).required(),
@@ -38,7 +40,30 @@ const loginParamsVerification = async (req, _res, next) => {
   next();
 };
 
+const authenticationToken = async (req, _res, next) => {
+  const { authorization: token } = req.headers;
+  if (!token) {
+    req.failAuthentication = {
+      statusCode: 401,
+      message: 'Token not found',
+    };
+  } else {
+    jwt.verify(token, process.env.JWT_SECRET,
+      async (err, _decode) => {
+        if (err) {
+          req.failAuthentication = {
+            statusCode: 401,
+            message: 'Expired or invalid token',
+          };
+        }
+    });
+  }
+
+  next();
+};
+
 module.exports = {
   userParamsVerification,
   loginParamsVerification,
+  authenticationToken,
 };

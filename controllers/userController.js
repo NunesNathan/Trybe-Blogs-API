@@ -2,6 +2,7 @@ require('dotenv').config();
 const jwt = require('jsonwebtoken');
 const jwtConfig = require('../config/jwt');
 const { userParamsVerification, loginParamsVerification,
+  authenticationToken,
 } = require('../middlewares/userMiddleware');
 const userService = require('../services/userService');
 
@@ -35,6 +36,18 @@ const userLogin = async (req, res) => {
   return res.status(200).json({ token: exists.token });
 };
 
+const listUsers = async (req, res) => {
+  if (req.failAuthentication) {
+    const { statusCode, message } = req.failAuthentication;
+
+    return res.status(statusCode).json({ message });
+  }
+
+  const list = await userService.listUsers();
+
+  return res.status(200).json(list);
+};
+
 module.exports = {
   newUser: [
     userParamsVerification,
@@ -43,5 +56,9 @@ module.exports = {
   attemptToLogin: [
     loginParamsVerification,
     userLogin,
+  ],
+  listUsers: [
+    authenticationToken,
+    listUsers,
   ],
 };

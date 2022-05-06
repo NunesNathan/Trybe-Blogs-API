@@ -23,7 +23,14 @@ const userLogin = async (user) => {
   return ({ token });
 };
 
+const listUsers = async () => {
+  const list = await userModel.findAll();
+
+  return list;
+};
+
 module.exports = {
   createUser,
   userLogin,
+  listUsers,
 };
