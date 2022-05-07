@@ -40,23 +40,28 @@ const loginParamsVerification = async (req, _res, next) => {
   next();
 };
 
+const authFailError = (msg) => ({
+  statusCode: 401,
+  message: msg,
+});
+
+const catcher = async (token, req) => {
+  jwt.verify(token, process.env.JWT_SECRET,
+    async (err, decode) => {
+      if (err) {
+        req.failAuthentication = authFailError('Expired or invalid token');
+      } else {
+        req.actualUser = decode.user;
+      }
+    });
+};
+
 const authenticationToken = async (req, _res, next) => {
   const { authorization: token } = req.headers;
   if (!token) {
-    req.failAuthentication = {
-      statusCode: 401,
-      message: 'Token not found',
-    };
+    req.failAuthentication = authFailError('Token not found');
   } else {
-    jwt.verify(token, process.env.JWT_SECRET,
-      async (err, _decode) => {
-        if (err) {
-          req.failAuthentication = {
-            statusCode: 401,
-            message: 'Expired or invalid token',
-          };
-        }
-    });
+    await catcher(token, req);
   }
 
   next();
