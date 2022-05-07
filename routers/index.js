@@ -15,6 +15,7 @@ router
   .get('/user/:id', userController.findUser)
   .post('/categories', categoryController.newCategory)
   .get('/categories', categoryController.listCategories)
+  .post('/post', postController.newPost)
   .get('/post/:id', postController.listPostsById);
 
 module.exports = router;
