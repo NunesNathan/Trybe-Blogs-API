@@ -1,6 +1,7 @@
 const express = require('express');
 const userController = require('../controllers/userController');
 const categoryController = require('../controllers/categoryController');
+const postController = require('../controllers/postController');
 
 const defaultRoute = (_request, response) => response.send();
 
@@ -13,6 +14,7 @@ router
   .get('/user', userController.listUsers)
   .get('/user/:id', userController.findUser)
   .post('/categories', categoryController.newCategory)
-  .get('/categories', categoryController.listCategories);
+  .get('/categories', categoryController.listCategories)
+  .get('/post/:id', postController.listPostsById);
 
 module.exports = router;
